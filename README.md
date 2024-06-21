@@ -1,3 +1,5 @@
+#Simple Resume Screener
+
 Very basic (heavily WIP) resume screener that I wrote up as a favour for a small business.
 
 You should have a `resumes` folder in the home directory, as well as a `keywords.txt` file that contains comma separated keywords of interest. (e.g. `IT,businessman,headbusinessman`). The description for the job should be present in the home directory under `jobdescription.txt`.
