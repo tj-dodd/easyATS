@@ -18,7 +18,5 @@ Dependencies:
 
 - docx2python
 - pdfplumber
-- re
-- os
 - pypandoc
 - comtypes.client
