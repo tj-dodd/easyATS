@@ -25,3 +25,5 @@ Dependencies:
 - nltk
 - pandas
 - sklearn
+
+Install packages with `pip install -r requirements.txt`
