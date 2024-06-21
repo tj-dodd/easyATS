@@ -93,7 +93,6 @@ final_resume_data = {'Resume Name': [],
                     'Similarity Score': []
 }
 
-resumeList = open("resumelist.txt", "w").close()
 selected_resumes = []
 for resumeFile in resumePaths:
     file_extension = resumeFile.split('.')[-1].lower()
