@@ -1,4 +1,4 @@
-#Simple Resume Screener
+# Simple Resume Screener
 
 Very basic (heavily WIP) resume screener that I wrote up as a favour for a small business.
 
