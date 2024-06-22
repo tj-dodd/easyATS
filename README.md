@@ -17,7 +17,6 @@ Dependencies:
 - docx2python
 - pdfplumber
 - pypandoc
-- comtypes.client
 - nltk
 - pandas
 - sklearn
