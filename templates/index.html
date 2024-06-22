@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="{{ url_for('static', filename='script.js')}}"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <title>Resume Screening</title>
+</head>
+<body>
+    <h1>Upload Files</h1>
+    <form action="{{ url_for('upload_files') }}" method="post" enctype="multipart/form-data">
+        <label for="jobdescription">Job Description:</label>
+        <input type="file" id="jobdescription" name="jobdescription" required>
+        <br><br>
+        <label for="resumes">Resumes:</label>
+        <input type="file" id="resumes" name="resumes" multiple required>
+        <br><br>
+        <label for="keywords">Keywords:</label>
+        <input type="file" id="keywords" name="keywords" required>
+        <br><br>
+        <input type="submit" value="Upload">
+    </form>
+</body>
+</html>
