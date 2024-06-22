@@ -1,0 +1,36 @@
+
+<!-- This content is licensed according to the W3C Software License at https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document !-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Screening Results</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</head>
+<body>
+    <h1>Screening Results</h1>
+    <table class="sortable">
+        <thead>
+            <tr>
+                <th><button>Resume Name</button></th>
+                <th class="num"><button>Keyword Hits</button></th>
+                <th class="num"><button>Similarity Score</button></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in resume_data %}
+            <tr>
+                <td>{{ row['Resume Name'] }}</td>
+                <td>{{ row['Keyword Hits'] }}</td>
+                <td>{{ row['Similarity Score'] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <br>
+    <a href="{{ url_for('delete_files') }}">Upload New Files</a>
+</body>
+</html>
