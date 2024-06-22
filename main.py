@@ -133,9 +133,6 @@ def process_files():
         hits = screen_resume(resume_text, keywordsString)
         similarity = calculate_resume_similarity(text)
 
-        totalscore = ((0.20 * similarity) + (0.80 * (hits)))
-        totalscore = round(totalscore, 2)
-
         final_resume_data['Resume Name'].append(resumeFile.removeprefix("uploads/"))
         final_resume_data['Keyword Hits'].append(hits)
         final_resume_data['Similarity Score'].append(similarity)
