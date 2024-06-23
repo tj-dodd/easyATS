@@ -31,4 +31,4 @@ pip install -r requirements.txt
 
 ## Credit
 
-Sortable table HTML/CSS/JSS sourced from W3C
+Sortable table HTML/CSS/JS sourced from W3C
