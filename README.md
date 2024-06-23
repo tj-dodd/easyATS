@@ -6,7 +6,7 @@ The app will ask for a list of resumes as well as a keywords file and job descri
 
 Results are then provided in a sortable table.
 
-Supported file types:
+## Supported file types
 
 - doc
 - docx
@@ -14,7 +14,7 @@ Supported file types:
 - txt
 - pdf
 
-Dependencies:
+## Dependencies
 
 - docx2python
 - pdfplumber
@@ -24,4 +24,11 @@ Dependencies:
 - sklearn
 - flask
 
-Install all packages with `pip install -r requirements.txt`.
+To install all packages, run this command:
+```
+pip install -r requirements.txt
+```
+
+## Credit
+
+Sortable table HTML/CSS/JSS sourced from W3C
