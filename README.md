@@ -1,4 +1,4 @@
-# Easy Resume Screener
+# easyATS
 
 Basic resume screener that I wrote up as a favour for a small business.
 
