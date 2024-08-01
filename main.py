@@ -6,9 +6,10 @@ import pypandoc
 from docx2python import docx2python
 from flask_sqlalchemy import SQLAlchemy
 import pandas as pd
+import tensorflow as tf
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
-from sklearn.feature_extraction.text import CountVectorizer
+from transformers import BertTokenizer, TFBertModel
 from sklearn.metrics.pairwise import cosine_similarity
 from werkzeug.utils import secure_filename
 import uuid
@@ -66,21 +67,27 @@ def screen_resume(resume_text, keywords):
     hits = sum(1 for keyword in keywords if re.search(r'\b' + re.escape(keyword) + r'\b', resume_text, re.IGNORECASE))
     return hits
 
-def calculate_resume_similarity(texts):
-    resume = CountVectorizer(stop_words='english')
-    count_matrix = resume.fit_transform(texts)
-    similarity_percentage = cosine_similarity(count_matrix)[0][1] * 100
-    return round(similarity_percentage + 1, 2)
-
 def preprocess_text(text):
     text = text.lower()
     text = re.sub(r'[^\w\s]', '', text)
-    text is text.strip()
     text = re.sub('[0-9]+', '', text)
-    words = word_tokenize(text)
-    stop_words = stopwords.words('english')
-    words = [word for word in words if word not in stop_words]
-    return ' '.join(words)
+    return text.strip()
+
+def embed_texts(texts, model, tokenizer):
+    encoded_input = tokenizer(texts, padding=True, truncation=True, return_tensors='tf')
+    model_output = model(encoded_input)
+    embeddings = tf.reduce_mean(model_output.last_hidden_state, axis=1)
+    return embeddings
+
+def calculate_resume_similarity(texts):
+    model_name = 'bert-base-uncased'
+    tokenizer = BertTokenizer.from_pretrained(model_name)
+    model = TFBertModel.from_pretrained(model_name)
+    preprocessed_texts = [preprocess_text(text) for text in texts]
+    embeddings = embed_texts(preprocessed_texts, model, tokenizer)
+    similarity_percentage = cosine_similarity(embeddings[0].numpy().reshape(1, -1), embeddings[1].numpy().reshape(1, -1))[0][0] * 100
+    return round(similarity_percentage, 2)
+
 
 @app.before_request
 def session_id():
