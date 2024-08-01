@@ -65,7 +65,7 @@
 </svg>
     <div class="container mt-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1>Upload Files</h1>
+            <h1>easyATS</h1>
             <div class="dropdown bd-mode-toggle">
                 <button class="btn btn-bd-primary py-2 dropdown-toggle d-flex align-items-center" id="bd-theme" type="button" aria-expanded="false" data-bs-toggle="dropdown" aria-label="Toggle theme (auto)">
 		<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sun" viewBox="0 0 16 16">
@@ -97,8 +97,14 @@
                 </ul>
             </div>
         </div>
-
-        <form action="{{ url_for('upload_files') }}" method="post" enctype="multipart/form-data" class="bg-light p-4 rounded">
+        <p>Streamline your recruitment process with easyATS. Our platform enables you to efficiently compare candidate resumes against job descriptions to determine the best fit, accomplished through the power of AI. Leverage our advanced keyword detection tool to scan resumes and identify top candidates.</p>
+        <p>Here's how it works:</p>
+        <ul>
+            <li><strong>Upload Resumes:</strong> Add as many resumes as you like.</li>
+            <li><strong>Upload Job Description:</strong> Provide a job description to compare against the resumes.</li>
+            <li><strong>Upload Keywords:</strong> Include a list of keywords separated by commas or spaces—the more, the better!</li>
+        </ul>
+        <form action="{{ url_for('upload_files') }}" method="post" enctype="multipart/form-data" class="form-container p-4 rounded">
             <div class="mb-3">
                 <label for="jobdescription" class="form-label">Job Description:</label>
                 <input type="file" id="jobdescription" name="jobdescription" class="form-control" required>
