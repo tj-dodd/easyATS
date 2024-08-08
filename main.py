@@ -12,6 +12,7 @@ from nltk.corpus import stopwords
 from transformers import BertTokenizer, TFBertModel
 from sklearn.metrics.pairwise import cosine_similarity
 from werkzeug.utils import secure_filename
+from werkzeug.urls import url_parse
 import uuid
 
 app = Flask(__name__)
@@ -32,17 +33,19 @@ def allowed_file(filename):
 
 def extract_text(file_path):
     file_extension = file_path.split('.')[-1].lower()
-    if file_extension == 'docx':
-        return extract_text_docx(file_path)
-    elif file_extension == 'doc':
-        return extract_text_docx(file_path)
-    elif file_extension == 'pdf':
-        return extract_text_pdf(file_path)
-    elif file_extension == 'rtf':
-        return extract_text_from_rtf(file_path)
-    elif file_extension == 'txt':
-        return extract_text_from_txt(file_path)
-    else:
+    try:
+        if file_extension == 'docx':
+            return extract_text_docx(file_path)
+        elif file_extension == 'doc':
+            return extract_text_docx(file_path)
+        elif file_extension == 'pdf':
+            return extract_text_pdf(file_path)
+        elif file_extension == 'rtf':
+            return extract_text_from_rtf(file_path)
+        elif file_extension == 'txt':
+            return extract_text_from_txt(file_path)
+    except Exception as e:
+        print(f"Error extracting text from {file_path}: {e}")
         return None
 
 def extract_text_docx(path):
@@ -88,6 +91,10 @@ def calculate_resume_similarity(texts):
     similarity_percentage = cosine_similarity(embeddings[0].numpy().reshape(1, -1), embeddings[1].numpy().reshape(1, -1))[0][0] * 100
     return round(similarity_percentage, 2)
 
+def is_safe_url(target):
+    ref_url = url_parse(request.host_url)
+    test_url = url_parse(target)
+    return test_url.scheme in ('http', 'https') and ref_url.netloc == test_url.netloc
 
 @app.before_request
 def session_id():
@@ -104,23 +111,32 @@ def upload_files():
     keywords = request.files['keywords']
     resumes = request.files.getlist('resumes')
 
-    keywords.filename = 'keywords.txt'
-    job_description.filename = 'jobdescription.txt'
+    job_description.filename = secure_filename('jobdescription.txt')
+    keywords.filename = secure_filename('keywords.txt')
 
     if not job_description or not allowed_file(job_description.filename):
         flash('Invalid job description file')
-        return redirect(request.url)
+        next_url = request.url
+        if not is_safe_url(next_url):
+            return abort(400)
+        return redirect(next_url)
     
     if not keywords or not allowed_file(keywords.filename):
         flash('Invalid keywords file')
-        return redirect(request.url)
+        next_url = request.url
+        if not is_safe_url(next_url):
+            return abort(400)
+        return redirect(next_url)
 
     if not all(allowed_file(resume.filename) for resume in resumes):
         flash('Invalid resume files')
-        return redirect(request.url)
+        next_url = request.url
+        if not is_safe_url(next_url):
+            return abort(400)
+        return redirect(next_url)
 
-    job_description_path = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(job_description.filename))
-    keywords_path = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(keywords.filename))
+    job_description_path = os.path.join(app.config['UPLOAD_FOLDER'], job_description.filename)
+    keywords_path = os.path.join(app.config['UPLOAD_FOLDER'], keywords.filename)
     
     job_description.save(job_description_path)
     keywords.save(keywords_path)
@@ -133,7 +149,10 @@ def upload_files():
         db.session.add(new_resume)
     
     db.session.commit()
-    return redirect(url_for('process_files'))
+    next_url = url_for('process_files')
+    if not is_safe_url(next_url):
+        return abort(400)
+    return redirect(next_url)
 
 @app.route('/delete_files')
 def delete_files():
@@ -144,7 +163,10 @@ def delete_files():
         db.session.delete(resume)
     
     db.session.commit()
-    return redirect(url_for('index'))
+    next_url = url_for('index')
+    if not is_safe_url(next_url):
+        return abort(400)
+    return redirect(next_url)
 
 @app.route('/process', methods=['GET'])
 def process_files():
@@ -180,4 +202,4 @@ if __name__ == '__main__':
     with app.app_context():
         db.drop_all()
         db.create_all()
-    app.run(debug=True)
+    app.run(debug=False)
