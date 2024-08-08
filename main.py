@@ -111,8 +111,8 @@ def upload_files():
     keywords = request.files['keywords']
     resumes = request.files.getlist('resumes')
 
-    job_description.filename = secure_filename('jobdescription.txt')
-    keywords.filename = secure_filename('keywords.txt')
+    job_description.filename = 'jobdescription.txt'
+    keywords.filename = 'keywords.txt'
 
     if not job_description or not allowed_file(job_description.filename):
         flash('Invalid job description file')
